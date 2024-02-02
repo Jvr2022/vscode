@@ -87,17 +87,7 @@ function concat(...groups: IRangedGroup[][]): IRangedGroup[] {
 	return consolidate(groups.reduce((r, g) => r.concat(g), []));
 }
 
-export interface IRangeMap {
-	readonly size: number;
-	readonly count: number;
-	paddingTop: number;
-	splice(index: number, deleteCount: number, items?: IItem[]): void;
-	indexAt(position: number): number;
-	indexAfter(position: number): number;
-	positionAt(index: number): number;
-}
-
-export class RangeMap implements IRangeMap {
+export class RangeMap {
 
 	private groups: IRangedGroup[] = [];
 	private _size = 0;

@@ -16,13 +16,13 @@ import { Selection } from 'vs/editor/common/core/selection';
 import { IContextKeyService } from 'vs/platform/contextkey/common/contextkey';
 import { IInstantiationService } from 'vs/platform/instantiation/common/instantiation';
 import { IWorkbenchListOptionsUpdate } from 'vs/platform/list/browser/listService';
-import { CellRevealRangeType, CellRevealType, ICellOutputViewModel, ICellViewModel, INotebookViewZoneChangeAccessor } from 'vs/workbench/contrib/notebook/browser/notebookBrowser';
+import { CellRevealRangeType, CellRevealType, ICellOutputViewModel, ICellViewModel } from 'vs/workbench/contrib/notebook/browser/notebookBrowser';
 import { CellPartsCollection } from 'vs/workbench/contrib/notebook/browser/view/cellPart';
 import { CellViewModel, NotebookViewModel } from 'vs/workbench/contrib/notebook/browser/viewModel/notebookViewModelImpl';
 import { ICellRange } from 'vs/workbench/contrib/notebook/common/notebookRange';
 
 
-export interface INotebookCellList extends ICoordinatesConverter {
+export interface INotebookCellList {
 	isDisposed: boolean;
 	inRenderingTransaction: boolean;
 	viewModel: NotebookViewModel | null;
@@ -54,6 +54,13 @@ export interface INotebookCellList extends ICoordinatesConverter {
 	attachViewModel(viewModel: NotebookViewModel): void;
 	attachWebview(element: HTMLElement): void;
 	clear(): void;
+	getCellViewScrollTop(cell: ICellViewModel): number;
+	getCellViewScrollBottom(cell: ICellViewModel): number;
+	getViewIndex(cell: ICellViewModel): number | undefined;
+	getViewIndex2(modelIndex: number): number | undefined;
+	getModelIndex(cell: CellViewModel): number | undefined;
+	getModelIndex2(viewIndex: number): number | undefined;
+	getVisibleRangesPlusViewportAboveAndBelow(): ICellRange[];
 	focusElement(element: ICellViewModel): void;
 	selectElements(elements: ICellViewModel[]): void;
 	getFocusedElements(): ICellViewModel[];
@@ -64,7 +71,6 @@ export interface INotebookCellList extends ICoordinatesConverter {
 	revealRangeInCell(cell: ICellViewModel, range: Selection | Range, revealType: CellRevealRangeType): Promise<void>;
 	revealCellOffsetInCenter(element: ICellViewModel, offset: number): void;
 	setHiddenAreas(_ranges: ICellRange[], triggerViewUpdate: boolean): boolean;
-	changeViewZones(callback: (accessor: INotebookViewZoneChangeAccessor) => void): void;
 	domElementOfElement(element: ICellViewModel): HTMLElement | null;
 	focusView(): void;
 	triggerScrollFromMouseWheelEvent(browserEvent: IMouseWheelEvent): void;
@@ -108,14 +114,4 @@ export interface CodeCellRenderTemplate extends BaseCellRenderTemplate {
 	editor: ICodeEditor;
 }
 
-export interface ICoordinatesConverter {
-	getCellViewScrollTop(cell: ICellViewModel): number;
-	getCellViewScrollBottom(cell: ICellViewModel): number;
-	getViewIndex(cell: ICellViewModel): number | undefined;
-	getViewIndex2(modelIndex: number): number | undefined;
-	getModelIndex(cell: CellViewModel): number | undefined;
-	getModelIndex2(viewIndex: number): number | undefined;
-	getVisibleRangesPlusViewportAboveAndBelow(): ICellRange[];
-	modelIndexIsVisible(modelIndex: number): boolean;
-	convertModelIndexToViewIndex(modelIndex: number): number;
-}
+
